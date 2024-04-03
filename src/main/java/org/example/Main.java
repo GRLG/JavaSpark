@@ -3,7 +3,9 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.spark.Partition;
 import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.function.FilterFunction;
 import org.apache.spark.sql .*;
+import scala.Function1;
 import scala.reflect.internal.Symbols;
 
 
@@ -36,6 +38,11 @@ public class Main {
 
         Dataset<Row> moderArtResult = dataset.filter("subject='Modern Art' AND year >=2007");
         moderArtResult.show();
+
+       Dataset<Row> moderArtResult2 = dataset.filter((FilterFunction<Row>) r -> r.getAs("subject").equals("Mordern Arts")
+                                                                                && Integer.parseInt(r.getAs("year")) >= 2007);
+       moderArtResult2.show();
+
 
         spark.close();
 
