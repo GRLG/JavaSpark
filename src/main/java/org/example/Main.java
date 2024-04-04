@@ -22,7 +22,7 @@ public class Main {
 
         Dataset<Row> dataset = spark.read().option("header", true)
                 .csv("src/main/resources/exams/students.csv");
-        dataset.show();
+   //     dataset.show();
         System.out.println(dataset.count() +" Registros ");
 
         Row firstRow = dataset.first();
@@ -37,13 +37,29 @@ public class Main {
         System.out.println(year);
 
         Dataset<Row> moderArtResult = dataset.filter("subject='Modern Art' AND year >=2007");
-        moderArtResult.show();
+      //  moderArtResult.show();
 
-       Dataset<Row> moderArtResult2 = dataset.filter((FilterFunction<Row>) r -> r.getAs("subject").equals("Mordern Arts")
+       Dataset<Row> moderArtResult2 = dataset.filter((FilterFunction<Row>) r -> r.getAs("subject").equals("Modern Art")
                                                                                 && Integer.parseInt(r.getAs("year")) >= 2007);
-       moderArtResult2.show();
+    //   moderArtResult2.show();
 
+       Column subjectCol = dataset.col("subject");
+       Column yearCol = dataset.col("year");
 
+       Dataset <Row> moderArtResult3 = dataset.filter(subjectCol.equalTo("Modern Art")
+                                                                               .and(yearCol.geq(2007)) );
+  //     moderArtResult3.show();
+
+       dataset.createOrReplaceTempView("my_students");
+
+//       Dataset<Row> result = spark.sql("select * from my_students where subject ='French' ");
+//       Dataset<Row> result = spark.sql("select score, year  from my_students where subject ='French' ");
+
+//        Dataset<Row> result = spark.sql("select max(score)  from my_students where subject ='French' ");
+//        Dataset<Row> result = spark.sql("select avg(score)  from my_students where subject ='French' ");
+        Dataset<Row> result = spark.sql("select distinct(year)  from my_students where subject ='French' ");
+        spark.cr
+        result.show();
         spark.close();
 
 
