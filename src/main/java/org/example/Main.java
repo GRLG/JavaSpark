@@ -57,11 +57,18 @@ public class Main {
 
 //        Dataset<Row> result = spark.sql("select max(score)  from my_students where subject ='French' ");
 //        Dataset<Row> result = spark.sql("select avg(score)  from my_students where subject ='French' ");
-        Dataset<Row> result = spark.sql("select distinct(year)  from my_students where subject ='French' ");
-        spark.cr
-        result.show();
-        spark.close();
+ //       Dataset<Row> result = spark.sql("select distinct(year)  from my_students where subject ='French' ");
 
+// grouping dataset by sql
+        Dataset<Row> result = spark.sql("select subject, year, count(score), avg(score) as average  from my_students group by subject, year");
+// ordering
+     Dataset<Row> result2 = spark.sql("select subject, year, count(score), avg(score) as average  from my_students group by subject, year order by subject, year ");
+
+     //result.drop("subject")
+
+        result.show(100);
+        result2.show(100);
+        spark.close();
 
 
     }
